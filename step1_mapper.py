@@ -17,21 +17,29 @@ for line in sys.stdin:
     # Check for start of content marker
     if '*** START OF' in line:
         in_content = True
+        continue
         
     # Check for end of content marker
     if '*** END OF' in line:
         in_content = False
+        break
 
-    # Check for Table of Content
-    if line == 'Contents\n':
+    # Check for Table of Contents
+    if line == 'Contents':
         toc = True
+        continue
 
-    if toc and line != '/n':
+    if toc and line != '':
         chapter = True
+        continue
 
-    if toc and chapter and (line == '\n'):
+    if toc and chapter and line == '':
         toc = False
         chapter = False
+        continue
+
+    if (not in_content) or toc:
+        continue
 
     # Process content only
     if in_content:
@@ -44,6 +52,6 @@ for line in sys.stdin:
             clean = clean.lower()
             
             # Filter: minimum length 3, alphabetic only, not a stop word
-            if len(clean) >= 3 and clean.isalpha() not in STOP_WORDS:
+            if len(clean) >= 3 and clean.isalpha() and clean not in STOP_WORDS:
                     output = f"{clean}\t1"
                     print(output)
