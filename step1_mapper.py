@@ -15,30 +15,13 @@ for line in sys.stdin:
     line = line.rstrip()
     
     # Check for start of content marker
-    if '*** START OF' in line:
+    if '======================================================================' in line:
         in_content = True
         continue
         
     # Check for end of content marker
-    if '*** END OF' in line:
+    if '======================================================================' in line:
         in_content = False
-        break
-
-    # Check for Table of Contents
-    if line == 'Contents':
-        toc = True
-        continue
-
-    if toc and line != '':
-        chapter = True
-        continue
-
-    if toc and chapter and line == '':
-        toc = False
-        chapter = False
-        continue
-
-    if (not in_content) or toc:
         continue
 
     # Process content only
