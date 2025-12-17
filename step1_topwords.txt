@@ -1,6 +1,6 @@
 said	8760
 one	6515
-man	5114
+man	5113
 would	5090
 could	4216
 upon	3773
@@ -9,12 +9,12 @@ know	3315
 see	3250
 time	3222
 little	3117
-room	3017
+room	3016
 like	2816
 two	2686
-holmes	2553
+holmes	2550
 say	2533
-house	2442
+house	2441
 way	2440
 back	2379
 must	2354

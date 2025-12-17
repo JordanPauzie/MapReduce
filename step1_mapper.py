@@ -7,25 +7,25 @@ from nltk.corpus import stopwords
 
 STOP_WORDS = set(stopwords.words('english'))
 
-in_header = True
 in_content = False
+marker_count = 0
 
 for line in sys.stdin:
     line = line.rstrip()
     
-    # Detect marker lines (======================================================================)
+    # Track marker lines to distinguish header from content
     if '======================================================================' in line:
-        if in_header:
-            # Second marker: end of header, start of content
-            in_header = False
+        marker_count += 1
+        # First marker: start of header (ignore, don't process)
+        # Second marker: end of header, start of content
+        if marker_count % 2 == 0:
             in_content = True
-        elif in_content:
-            # Third marker: end of content
+        else:
+            # Odd markers (1st, 3rd, 5th, etc.): end of content, start of next header
             in_content = False
-            in_header = True  # Ready for next book
         continue
 
-    # Process content only
+    # Process content only (between second and third markers)
     if in_content:
         # Extract words from lines
         words = re.findall(r'\b[\w\']+\b', line)

@@ -14,34 +14,33 @@ with open("step1_reduced.txt") as f:
         word, _ = line.strip().split('\t')
         TOP_WORDS.add(word)
 
-# State tracking
-in_header = False
 in_content = False
+in_header = False
 current_year = None
 
 for line in sys.stdin:
     original_line = line
     line = line.rstrip()
     
-    # Detect marker lines (======================================================================)
+    # Track marker lines
     if '======================================================================' in line:
         if not in_header and not in_content:
-            # First marker: start of header section
+            # First marker: entering header section
             in_header = True
             current_year = None
         elif in_header:
-            # Second marker: end of header, start of content
+            # Second marker: leaving header, entering content
             in_header = False
             in_content = True
         elif in_content:
-            # Third marker: end of content
+            # Third marker: leaving content, entering next header
             in_content = False
+            in_header = True
             current_year = None
         continue
 
     # Extract year from header section
     if in_header and line.startswith('Year:'):
-        # Extract year from "Year: 1887" format
         year_match = re.search(r'Year:\s*(\d{4})', original_line)
         if year_match:
             current_year = year_match.group(1)
