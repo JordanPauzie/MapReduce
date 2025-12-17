@@ -27,15 +27,15 @@ for line in sys.stdin:
 
     # Process content only (between second and third markers)
     if in_content:
-        # Extract words from lines
-        words = re.findall(r'\b[\w\']+\b', line)
-
+        # Extract words - use \w which includes Unicode word characters
+        # This is more robust than [a-zA-Z] for handling edge cases
+        words = re.findall(r'\b\w+\b', line.lower())
+        
         for word in words:
-            # Clean word: remove punctuation, lowercase
-            clean = re.sub(r'[^\w\s]', '', word)
-            clean = clean.lower()
+            # Clean word: remove any non-alphabetic characters (handles Unicode punctuation)
+            clean = re.sub(r'[^a-z]', '', word)
             
             # Filter: minimum length 3, alphabetic only, not a stop word
             if len(clean) >= 3 and clean.isalpha() and clean not in STOP_WORDS:
-                    output = f"{clean}\t1"
-                    print(output)
+                output = f"{clean}\t1"
+                print(output)

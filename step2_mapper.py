@@ -47,13 +47,13 @@ for line in sys.stdin:
 
     # Process content only
     if in_content and current_year is not None:
-        # Extract words from lines
-        words = re.findall(r'\b[\w\']+\b', original_line)
-
+        # Extract words - use \w which includes Unicode word characters
+        # This matches the same logic as step1_mapper for consistency
+        words = re.findall(r'\b\w+\b', original_line.lower())
+        
         for word in words:
-            # Clean word: remove punctuation, lowercase
-            clean = re.sub(r'[^\w\s]', '', word)
-            clean = clean.lower()
+            # Clean word: remove any non-alphabetic characters (handles Unicode punctuation)
+            clean = re.sub(r'[^a-z]', '', word)
             
             # Filter: minimum length 3, alphabetic only, in top 25 words
             if len(clean) >= 3 and clean.isalpha() and clean in TOP_WORDS:
