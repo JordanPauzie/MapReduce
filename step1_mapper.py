@@ -7,21 +7,22 @@ from nltk.corpus import stopwords
 
 STOP_WORDS = set(stopwords.words('english'))
 
+in_header = True
 in_content = False
-toc = False
-chapter = False
 
 for line in sys.stdin:
     line = line.rstrip()
     
-    # Check for start of content marker
+    # Detect marker lines (======================================================================)
     if '======================================================================' in line:
-        in_content = True
-        continue
-        
-    # Check for end of content marker
-    if '======================================================================' in line:
-        in_content = False
+        if in_header:
+            # Second marker: end of header, start of content
+            in_header = False
+            in_content = True
+        elif in_content:
+            # Third marker: end of content
+            in_content = False
+            in_header = True  # Ready for next book
         continue
 
     # Process content only
